@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Jornada do Abacate 🥑</title>
+<style>
+body{margin:0;font-family:Arial;background:#183a2d;color:#fff;overflow:hidden}
+#game{height:100vh;position:relative;background:linear-gradient(#2d6a4f,#1b4332)}
+.tree{position:absolute;font-size:40px}
+#player,#goal{position:absolute;font-size:48px;top:60%}
+#player{left:20px}
+#goal{right:20px}
+#top{position:absolute;top:10px;left:10px;background:#0008;padding:10px;border-radius:12px}
+.heart{position:absolute;animation:fall 5s linear infinite}
+@keyframes fall{from{transform:translateY(-50px)}to{transform:translateY(110vh)}}
+#box,#win,#start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.panel{background:white;color:black;padding:20px;border-radius:16px;max-width:550px;text-align:center}
+#box,#win{display:none}
+button{padding:10px;margin:6px;width:100%}
+.controls{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:10px}
+.controls button{width:80px}
+</style>
+</head>
+<body>
+<div id="game">
+<div id="top">🥑 Eryka encontra 🍄 Vitor<br>❤️ Desde 07/07/2023</div>
+
+<div class="tree" style="left:10%;top:20%">🌲</div>
+<div class="tree" style="left:25%;top:70%">🌳</div>
+<div class="tree" style="left:45%;top:25%">🌲</div>
+<div class="tree" style="left:65%;top:65%">🌳</div>
+<div class="tree" style="left:82%;top:20%">🌲</div>
+
+<div id="player">🥑</div>
+<div id="goal">🍄</div>
+
+<div id="start">
+<div class="panel">
+<h1>🥑 A Jornada do Abacate 🍄</h1>
+<p>Eryka precisa atravessar a floresta das memórias para encontrar Vitor.</p>
+<p>Cada fase guarda uma lembrança especial do relacionamento.</p>
+<button onclick="iniciar()">Começar ❤️</button>
+</div>
+</div>
+
+<div id="box">
+<div class="panel">
+<h2 id="q"></h2>
+<div id="a"></div>
+</div>
+</div>
+
+<div id="win">
+<div class="panel">
+<h1>🥑❤️🍄</h1>
+<h2>O Abacate encontrou seu Cogumelo!</h2>
+<p>Vitor, obrigado por todos os momentos desde 07/07/2023.</p>
+<p>Do primeiro beijo em frente à casa da vó da Eryka às idas ao shopping.</p>
+<p>Hambúrgueres, risadas e memórias incríveis.</p>
+<p>Que nossa aventura continue por muitos anos.</p>
+<h3>❤️ Eu te amo ❤️</h3>
+<p>— Eryka 🥑</p>
+</div>
+</div>
+
+<div class="controls">
+<button onclick="move(-30)">⬅️</button>
+<button onclick="move(30)">➡️</button>
+</div>
+</div>
+
+<script>
+for(let i=0;i<20;i++){
+ let h=document.createElement('div');
+ h.className='heart';
+ h.textContent='❤️';
+ h.style.left=Math.random()*100+'vw';
+ h.style.animationDelay=Math.random()*5+'s';
+ document.body.appendChild(h);
+}
+
+const fases=[
+["Em que dia começamos a namorar?",["06/07/2023","07/07/2023","08/07/2023"],1],
+["Onde foi nosso primeiro beijo?",["Praça","Em frente à casa da vó dela","Shopping"],1],
+["Quem disse 'eu te amo' primeiro?",["Vitor","Eryka","Os dois"],0],
+["Qual nossa comida favorita?",["Pizza","Hambúrguer","Sushi"],1],
+["Qual passeio mais marcou nós dois?",["Praia","Cinema","Idas ao shopping"],2]
+];
+
+let etapa=0;
+const p=document.getElementById('player');
+
+function iniciar(){
+ document.getElementById('start').style.display='none';
+}
+
+function move(dx){
+ let x=parseInt(p.style.left||20);
+ x+=dx;
+ p.style.left=x+'px';
+
+ if(etapa<fases.length && x>(etapa+1)*(window.innerWidth/(fases.length+2))){
+   pergunta();
+ }
+
+ if(x>window.innerWidth-120 && etapa>=fases.length){
+   document.getElementById('win').style.display='flex';
+ }
+}
+
+function pergunta(){
+ let f=fases[etapa];
+ document.getElementById('q').innerText=f[0];
+ let a=document.getElementById('a');
+ a.innerHTML='';
+ f[1].forEach((txt,i)=>{
+   let b=document.createElement('button');
+   b.innerText=txt;
+   b.onclick=()=>{
+      if(i===f[2]){
+        etapa++;
+        document.getElementById('box').style.display='none';
+      } else alert('❤️ Tente novamente!');
+   };
+   a.appendChild(b);
+ });
+ document.getElementById('box').style.display='flex';
+}
+</script>
+</body>
+</html>
